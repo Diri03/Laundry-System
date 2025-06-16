@@ -1,5 +1,5 @@
 <?php
-    $query = mysqli_query($conn, "SELECT o.* FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id WHERE o.deleted_at is NULL ORDER BY o.id DESC");
+    $query = mysqli_query($conn, "SELECT o.*, c.customer_name FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id WHERE o.deleted_at is NULL ORDER BY o.id DESC");
     $rows = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
     if (isset($_GET['delete'])) {
@@ -23,24 +23,20 @@
                     <table class="table table-bordered mb-0">
                         <thead>
                             <tr>
-                                <th>No</th>
                                 <th>Code</th>
                                 <th>Name</th>
                                 <th>Order</th>
-                                <th>End Order</th>
                                 <th>Status</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($rows as $key => $data) { ?>
+                            <?php foreach ($rows as $data) { ?>
                                 <tr>
-                                    <td><?php echo $key + 1; ?></td>
-                                    <td><?php echo $data['order_code']; ?></td>
+                                    <td><a href="?page=add-order&detail=<?php echo $data['id']; ?>"><?php echo $data['order_code']; ?></a></td>
                                     <td><?php echo $data['customer_name']; ?></td>
                                     <td><?php echo $data['order_date']; ?></td>
-                                    <td><?php echo $data['order_end_date']; ?></td>
-                                    <td><?php echo $data['order_status']; ?></td>
+                                    <td><?php echo $data['order_status'] == 0 ? 'Process' : 'Picked'; ?></td>
                                     <td>
                                         <a href="?page=add-order&edit=<?php echo $data['id']; ?>" class="btn btn-success">Edit</a>
                                         <a onclick="return alert('Are you sure?')" href="?page=order&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>

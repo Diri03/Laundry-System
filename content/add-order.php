@@ -5,6 +5,38 @@
     $queryS = mysqli_query($conn, "SELECT * FROM type_of_service WHERE deleted_at is NULL ORDER BY id DESC");
     $rowsS = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
 
+    if (isset($_GET['detail'])) {
+        $id_order = $_GET['detail'];
+        $queryOrder = mysqli_query($conn, "SELECT o.*, c.customer_name FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id WHERE o.id = '$id_order'");
+        $rowOrder = mysqli_fetch_assoc($queryOrder);
+
+        $queryD = mysqli_query($conn, "SELECT od.*, s.* FROM trans_order_detail od LEFT JOIN type_of_service s ON od.id_service = s.id WHERE id_order = '$id_order' ORDER BY od.id DESC");
+        $rowD = mysqli_fetch_all($queryD, MYSQLI_ASSOC);
+    }
+
+    if (isset($_POST["save"])) {
+        $id_customer = $_POST['id_customer'];
+        $order_code = $_POST['order_code'];
+        $order_date = $_POST['order_date'];
+        // $order_end_date = $_POST['order_end_date'];
+        $order_status = $_POST['order_status'];
+
+        $insert = mysqli_query($conn, "INSERT INTO trans_order (id_customer, order_code, order_date, order_status) VALUES ('$id_customer', '$order_code', '$order_date', '$order_status')");
+        if ($insert) {
+            $id_order = mysqli_insert_id($conn);
+            for ($i=0; $i < count($_POST['id_service']); $i++) { 
+                $id_service = $_POST['id_service'][$i];
+                $qty = $_POST['qty'][$i] * 1000;
+                $queryService = mysqli_query($conn, "SELECT * FROM type_of_service WHERE id = '$id_service'");
+                $rowsService = mysqli_fetch_assoc($queryService);
+                $subtotal = $_POST['qty'][$i] * $rowsService['price'];
+                mysqli_query($conn, "INSERT INTO trans_order_detail (id_order, id_service, qty, subtotal) VALUES ('$id_order', '$id_service', '$qty', '$subtotal')");
+            }
+            header("location:?page=order&addition=success");
+        }
+
+    }
+
     if (isset($_GET['edit'])) {
         $id_order = $_GET['edit'];
         $title = "Edit";
@@ -13,7 +45,6 @@
         $code_form = $row['order_code'];
         $customer_form = $row['id_customer'];
         $date_form = $row['order_date'];
-        $end_date_form = $row['order_end_date'];
 
         if (isset($_POST['customer_name'])) {
             $id_level = $_POST['id_level'];
@@ -27,14 +58,13 @@
         $title = "Add";
         $customer_form = "";
         $date_form = "";
-        $end_date_form = "";
 
-        $queryO = mysqli_query($conn, "SELECT * FROM trans_order");
+        $queryO = mysqli_query($conn, "SELECT * FROM trans_order ORDER BY id DESC");
         if (mysqli_num_rows($queryO) == 0) {
-            $code_form = "#" . "1";
+            $code_form = "TR" . "1";
         } else {
             $rowO = mysqli_fetch_assoc($queryO);
-            $code_form = "#" . $rowO['id'] + 1;
+            $code_form = "TR" . $rowO['id'] + 1;
         }
         
         if (isset($_POST['customer_name'])) {
@@ -45,17 +75,6 @@
             mysqli_query($conn, "INSERT INTO customer (customer_name, phone, address) VALUES ('$name', '$phone', '$address')");
             header("location:?page=customer&add=success");
         }
-
-    }
-
-    if (isset($_POST["save"])) {
-        $id_customer = $_POST['id_customer'];
-        $order_code = $_POST['order_code'];
-        $order_date = $_POST['order_date'];
-        $order_end_date = $_POST['order_end_date'];
-        $order_status = $_POST['order_status'];
-
-        // $id_order =
     }
 ?>
 
@@ -63,65 +82,115 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title"><?php echo $title; ?> Order</h5>
-                <form action="" method="post">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="code" class="form-label">Code</label>
-                                <input readonly type="text" id="code" class="form-control" value="<?php echo $code_form; ?>" required>
-                                <input type="hidden" name="order_code" value="<?php echo $code_form; ?>">
-                            </div>
-                            <div class="mb-3">
-                                <label for="date" class="form-label">Date</label>
-                                <input type="date" name="order_date" id="date" class="form-control" value="<?php echo $date_form; ?>" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Code</label>
-                                <select name="order_status" id="status" class="form-control" required>
-                                    <option value="">Choose Status</option>
-                                    <option value="0">Process</option>
-                                    <option value="1">Picked</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
-                                <select name="id_customer" id="name" class="form-control" required>
-                                    <option value="">Choose Customer</option>
-                                    <?php foreach ($rowsC as $key => $data) { ?>
-                                        <option value="<?php echo $data['id']; ?>"><?php echo $data['customer_name']; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="end_date" class="form-label">End Date</label>
-                                <input type="date" name="order_end_date" id="end_date" class="form-control" value="<?php echo $end_date_form; ?>" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3" align="right">
-                            <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
-                        </div>
-                        <div class="table-responsive mb-3">
-                            <table class="table table-stripped" id="myTable">
+                <?php if (isset($_GET['detail'])): ?>
+                    <h5 class="card-title">Detail Order</h5>
+                    <div class="table-responsive">
+                        <table class="table table-stripped">
+                            <tr>
+                                <th>Code</th>
+                                <td>:</td>
+                                <td><?php echo $rowOrder['order_code']; ?></td>
+                                <th>Date</th>
+                                <td>:</td>
+                                <td><?php echo $rowOrder['order_date']; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td>:</td>
+                                <td><?php echo $rowOrder['customer_name']; ?></td>
+                                <th>Status</th>
+                                <td>:</td>
+                                <td><?php echo $rowOrder['order_status'] == 0 ? 'Process' : 'Picked'; ?></td>
+                            </tr>
+                        </table>
+                        <br><br>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Type of Service</th>
-                                        <th>Qty</th>
+                                        <th>qty</th>
                                         <th>Price</th>
-                                        <th></th>
+                                        <th>Subtotal</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <?php $total = 0; ?>
+                                    <?php foreach ($rowD as $key => $data) { ?>
+                                        <tr>
+                                            <td><?php echo $key + 1; ?></td>
+                                            <td><?php echo $data['service_name']; ?></td>
+                                            <td><?php echo $data['qty']/1000; ?></td>
+                                            <td><?php echo $data['price']; ?></td>
+                                            <td><?php echo $data['qty']/1000 * $data['price']; $total += $data['qty']/1000 * $data['price']; ?></td>
+
+                                        </tr>
+                                    <?php } ?>
+                                    <tr>
+                                        <td colspan="4">Total</td>
+                                        <td><?php echo $total; ?></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-success" name="save">Save</button>
-                    </div>
-                </form>
+                <?php else: ?>
+                    <h5 class="card-title">Add Order</h5>
+                    <form action="" method="post">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="code" class="form-label">Code</label>
+                                    <input readonly type="text" id="code" class="form-control" value="<?php echo $code_form; ?>" required>
+                                    <input type="hidden" name="order_code" value="<?php echo $code_form; ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date</label>
+                                    <input type="date" name="order_date" id="date" class="form-control" value="<?php echo $date_form; ?>" required>
+                                </div>                                
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <select name="id_customer" id="name" class="form-control" required>
+                                        <option value="">Choose Customer</option>
+                                        <?php foreach ($rowsC as $key => $data) { ?>
+                                            <option value="<?php echo $data['id']; ?>"><?php echo $data['customer_name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Code</label>
+                                    <select name="order_status" id="status" class="form-control" required>
+                                        <option value="">Choose Status</option>
+                                        <option value="0">Process</option>
+                                        <option value="1">Picked</option>
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <div class="mb-3" align="right">
+                                <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
+                            </div>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-stripped" id="myTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Type of Service</th>
+                                            <th>Qty</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success" name="save">Save</button>
+                        </div>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -136,15 +205,14 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
         <td>
-            <select name="id_service" class="form-control" required>
+            <select name="id_service[]" class="form-control" required>
                 <option value="">Choose Service</option>
                 <?php foreach ($rowsS as $key => $data) { ?>
-                    <option value="<?php echo $data['id']; ?>" data-price="<?php echo $data['price'];?>"><?php echo $data['service_name']; ?></option>
+                    <option value="<?php echo $data['id']; ?>"><?php echo $data['service_name']; ?></option>
                 <?php } ?>
             </select>
         </td>
-        <td><input type="number" class="form-control" name="qty"></td>
-        <td><input type="number" class="form-control" name="price"></td>
+        <td><input type="number" step="any" class="form-control" name="qty[]"></td>
         <td><button type="button" class="btn btn-danger delRow">Delete</button></td>
         `;
         tbody.appendChild(tr);
@@ -160,21 +228,4 @@
             }
         }
     });
-
-    // Ambil elemen-elemen dalam tr baru
-    const serviceSelect = tr.querySelector('select[name="id_service"]');
-    const qtyInput = tr.querySelector('input[name="qty"]');
-    const priceInput = tr.querySelector('input[name="price"]');
-
-    // Fungsi hitung otomatis harga
-    function updatePrice() {
-        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-        const unitPrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-        const qty = parseFloat(qtyInput.value) || 0;
-        priceInput.value = unitPrice * qty;
-    }
-
-    // Pasang event
-    serviceSelect.addEventListener('change', updatePrice);
-    qtyInput.addEventListener('input', updatePrice);
 </script>
