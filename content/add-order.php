@@ -84,7 +84,7 @@
             <div class="card-body">
                 <?php if (isset($_GET['detail'])): ?>
                     <h5 class="card-title">Detail Order</h5>
-                    <div class="table-responsive">
+                    <div class="table-responsive mb-3">
                         <table class="table table-stripped">
                             <tr>
                                 <th>Code</th>
@@ -104,37 +104,44 @@
                             </tr>
                         </table>
                         <br><br>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
+                        
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Type of Service</th>
+                                    <th>qty</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $total = 0; ?>
+                                <?php foreach ($rowD as $key => $data) { ?>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Type of Service</th>
-                                        <th>qty</th>
-                                        <th>Price</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $total = 0; ?>
-                                    <?php foreach ($rowD as $key => $data) { ?>
-                                        <tr>
-                                            <td><?php echo $key + 1; ?></td>
-                                            <td><?php echo $data['service_name']; ?></td>
-                                            <td><?php echo $data['qty']/1000; ?></td>
-                                            <td><?php echo $data['price']; ?></td>
-                                            <td><?php echo $data['qty']/1000 * $data['price']; $total += $data['qty']/1000 * $data['price']; ?></td>
+                                        <td><?php echo $key + 1; ?></td>
+                                        <td><?php echo $data['service_name']; ?></td>
+                                        <td><?php echo $data['qty']/1000; ?></td>
+                                        <td><?php echo $data['price']; ?></td>
+                                        <td><?php echo $data['qty']/1000 * $data['price']; $total += $data['qty']/1000 * $data['price']; ?></td>
 
-                                        </tr>
-                                    <?php } ?>
-                                    <tr>
-                                        <td colspan="4">Total</td>
-                                        <td><?php echo $total; ?></td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                <?php } ?>
+                                <tr>
+                                    <td colspan="4">Total</td>
+                                    <td><?php echo $total; ?></td>
+                                </tr>
+                            </tbody>
+                        </table>                        
                     </div>
+
+                    <div class="mb-3" align="center">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Buy
+                        </button>
+                    </div>
+
                 <?php else: ?>
                     <h5 class="card-title">Add Order</h5>
                     <form action="" method="post">
@@ -192,6 +199,39 @@
                     </form>
                 <?php endif; ?>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Pay Order Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="total" class="form-label">Total</label>
+                        <input readonly type="number" step="any" id="total" class="form-control" value="<?php echo $total; ?>" required>
+                        <input type="hidden" name="total" value="<?php echo $total; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pay" class="form-label">Pay</label>
+                        <input type="number" step="any" name="order_pay" id="pay" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="change" class="form-label">Change</label>
+                        <input readonly type="number" step="any" id="change" class="form-control" value="" required>
+                        <input type="hidden" name="order_change" value="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
