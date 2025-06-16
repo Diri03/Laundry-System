@@ -2,6 +2,9 @@
     $queryC = mysqli_query($conn, "SELECT * FROM customer WHERE deleted_at is NULL ORDER BY id DESC");
     $rowsC = mysqli_fetch_all($queryC, MYSQLI_ASSOC);
 
+    $queryS = mysqli_query($conn, "SELECT * FROM type_of_service WHERE deleted_at is NULL ORDER BY id DESC");
+    $rowsS = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
+
     if (isset($_GET['edit'])) {
         $id_order = $_GET['edit'];
         $title = "Edit";
@@ -44,6 +47,16 @@
         }
 
     }
+
+    if (isset($_POST["save"])) {
+        $id_customer = $_POST['id_customer'];
+        $order_code = $_POST['order_code'];
+        $order_date = $_POST['order_date'];
+        $order_end_date = $_POST['order_end_date'];
+        $order_status = $_POST['order_status'];
+
+        // $id_order =
+    }
 ?>
 
 <div class="row">
@@ -56,11 +69,20 @@
                         <div class="col-sm-6">
                             <div class="mb-3">
                                 <label for="code" class="form-label">Code</label>
-                                <input readonly type="text" name="order_code" id="code" class="form-control" value="<?php echo $code_form; ?>" required>
+                                <input readonly type="text" id="code" class="form-control" value="<?php echo $code_form; ?>" required>
+                                <input type="hidden" name="order_code" value="<?php echo $code_form; ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="date" class="form-label">Date</label>
                                 <input type="date" name="order_date" id="date" class="form-control" value="<?php echo $date_form; ?>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Code</label>
+                                <select name="order_status" id="status" class="form-control" required>
+                                    <option value="">Choose Status</option>
+                                    <option value="0">Process</option>
+                                    <option value="1">Picked</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -78,12 +100,81 @@
                                 <input type="date" name="order_end_date" id="end_date" class="form-control" value="<?php echo $end_date_form; ?>" required>
                             </div>
                         </div>
+
+                        <div class="mb-3" align="right">
+                            <button type="button" id="addRow" class="btn btn-primary">Add Row</button>
+                        </div>
+                        <div class="table-responsive mb-3">
+                            <table class="table table-stripped" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Type of Service</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-success" name="save">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const button = document.querySelector('#addRow');
+    const tbody = document.querySelector('#myTable tbody');
+    let count = 0;
+
+    button.addEventListener("click", function(){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td>
+            <select name="id_service" class="form-control" required>
+                <option value="">Choose Service</option>
+                <?php foreach ($rowsS as $key => $data) { ?>
+                    <option value="<?php echo $data['id']; ?>" data-price="<?php echo $data['price'];?>"><?php echo $data['service_name']; ?></option>
+                <?php } ?>
+            </select>
+        </td>
+        <td><input type="number" class="form-control" name="qty"></td>
+        <td><input type="number" class="form-control" name="price"></td>
+        <td><button type="button" class="btn btn-danger delRow">Delete</button></td>
+        `;
+        tbody.appendChild(tr);
+
+    });
+
+    // Delegasi event ke tbody
+    tbody.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('delRow')) {
+            const tr = e.target.closest('tr');
+            if (tr) {
+                tr.remove(); // Hapus baris
+            }
+        }
+    });
+
+    // Ambil elemen-elemen dalam tr baru
+    const serviceSelect = tr.querySelector('select[name="id_service"]');
+    const qtyInput = tr.querySelector('input[name="qty"]');
+    const priceInput = tr.querySelector('input[name="price"]');
+
+    // Fungsi hitung otomatis harga
+    function updatePrice() {
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        const unitPrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+        const qty = parseFloat(qtyInput.value) || 0;
+        priceInput.value = unitPrice * qty;
+    }
+
+    // Pasang event
+    serviceSelect.addEventListener('change', updatePrice);
+    qtyInput.addEventListener('input', updatePrice);
+</script>
