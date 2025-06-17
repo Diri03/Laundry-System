@@ -37,6 +37,15 @@
 
     }
 
+    if (isset($_POST['save2'])) {
+        $order_pay = $_POST['order_pay'];
+        $total = $_POST['total'];
+        $change = $order_pay - $total;
+        $now = date('Y-m-d H:i:s');
+        $order_end_date = $now;
+        $order_status = 1;
+    }
+
     if (isset($_GET['edit'])) {
         $id_order = $_GET['edit'];
         $title = "Edit";
@@ -153,9 +162,17 @@
                                     <input type="hidden" name="order_code" value="<?php echo $code_form; ?>">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="date" class="form-label">Date</label>
-                                    <input type="date" name="order_date" id="date" class="form-control" value="<?php echo $date_form; ?>" required>
-                                </div>                                
+                                    <label for="date_end" class="form-label">Date End</label>
+                                    <input type="date" name="order_end_date" id="date_end" class="form-control" value="<?php echo $date_form; ?>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Code</label>
+                                    <select name="order_status" id="status" class="form-control" required>
+                                        <option value="">Choose Status</option>
+                                        <option value="0">Process</option>
+                                        <option value="1">Picked</option>
+                                    </select>
+                                </div>                           
                             </div>
                             <div class="col-sm-6">
                                 <div class="mb-3">
@@ -168,13 +185,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Code</label>
-                                    <select name="order_status" id="status" class="form-control" required>
-                                        <option value="">Choose Status</option>
-                                        <option value="0">Process</option>
-                                        <option value="1">Picked</option>
-                                    </select>
-                                </div>
+                                    <label for="date" class="form-label">Date</label>
+                                    <input type="date" name="order_date" id="date" class="form-control" value="<?php echo $date_form; ?>" required>
+                                </div>     
                             </div>
     
                             <div class="mb-3" align="right">
@@ -220,16 +233,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="pay" class="form-label">Pay</label>
-                        <input type="number" step="any" name="order_pay" id="pay" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="change" class="form-label">Change</label>
-                        <input readonly type="number" step="any" id="change" class="form-control" value="" required>
-                        <input type="hidden" name="order_change" value="">
+                        <input type="number" step="any" min="<?php echo $total; ?>" name="order_pay" id="pay" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" name="save2">Save</button>
                 </div>
             </form>
         </div>
@@ -268,4 +276,9 @@
             }
         }
     });
+
+    function name(params) {
+        
+    }
+
 </script>

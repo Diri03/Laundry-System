@@ -14,7 +14,7 @@
             $_SESSION['ID_LEVEL'] = $row['id_level'];
             header("location:home.php");
         } else {
-            header("location:index.php?login=failed");
+            header("location:index.php?login=error");
         }
 
     }
