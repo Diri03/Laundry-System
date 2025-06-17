@@ -5,6 +5,11 @@
     $queryS = mysqli_query($conn, "SELECT * FROM type_of_service WHERE deleted_at is NULL ORDER BY id DESC");
     $rowsS = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
 
+    function tanggal($d){
+        $waktu = strtotime($d);
+        return date('d F Y', $waktu);
+    }
+
     if (isset($_GET['detail'])) {
         $id_order = $_GET['detail'];
         $queryOrder = mysqli_query($conn, "SELECT o.*, c.customer_name FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id WHERE o.id = '$id_order'");
@@ -12,16 +17,21 @@
 
         $queryD = mysqli_query($conn, "SELECT od.*, s.* FROM trans_order_detail od LEFT JOIN type_of_service s ON od.id_service = s.id WHERE id_order = '$id_order' ORDER BY od.id DESC");
         $rowD = mysqli_fetch_all($queryD, MYSQLI_ASSOC);
+
+        $lahir = strtotime($rowOrder['order_date']);
+        $lahirTahun = (int)date("Y", $lahir);
+        $lahirBulan = (int)date("m", $lahir);
+        $lahirHari = (int)date("d", $lahir);
     }
 
     if (isset($_POST["save"])) {
         $id_customer = $_POST['id_customer'];
         $order_code = $_POST['order_code'];
         $order_date = $_POST['order_date'];
-        // $order_end_date = $_POST['order_end_date'];
+        $order_end_date = $_POST['order_end_date'];
         $order_status = $_POST['order_status'];
 
-        $insert = mysqli_query($conn, "INSERT INTO trans_order (id_customer, order_code, order_date, order_status) VALUES ('$id_customer', '$order_code', '$order_date', '$order_status')");
+        $insert = mysqli_query($conn, "INSERT INTO trans_order (id_customer, order_code, order_date, order_end_date, order_status) VALUES ('$id_customer', '$order_code', '$order_date', '$order_end_date', '$order_status')");
         if ($insert) {
             $id_order = mysqli_insert_id($conn);
             for ($i=0; $i < count($_POST['id_service']); $i++) { 
@@ -38,12 +48,20 @@
     }
 
     if (isset($_POST['save2'])) {
+        $id_order = $_GET['detail'];
+        $id_customer = $rowOrder['id_customer'];
         $order_pay = $_POST['order_pay'];
         $total = $_POST['total'];
-        $change = $order_pay - $total;
+        $order_change = $order_pay - $total;
         $now = date('Y-m-d H:i:s');
-        $order_end_date = $now;
+        $pickup_date = $now;
         $order_status = 1;
+
+        $update = mysqli_query($conn, "UPDATE trans_order SET order_status='$order_status', order_pay='$order_pay', order_change='$order_change', total='$total' WHERE id='$id_order'");
+        if ($update) {
+            mysqli_query($conn, "INSERT INTO trans_laundry_pickup (id_order, id_customer, pickup_date) VALUES ('$id_order', '$id_customer', '$pickup_date')");
+            header("location:?page=add-order&detail=" . $id_order . "&status=pickup");
+        }
     }
 
     if (isset($_GET['edit'])) {
@@ -101,12 +119,17 @@
                                 <td><?php echo $rowOrder['order_code']; ?></td>
                                 <th>Date</th>
                                 <td>:</td>
-                                <td><?php echo $rowOrder['order_date']; ?></td>
+                                <td><?php echo tanggal($rowOrder['order_date']); ?></td>
                             </tr>
                             <tr>
                                 <th>Name</th>
                                 <td>:</td>
                                 <td><?php echo $rowOrder['customer_name']; ?></td>
+                                <th>End Date</th>
+                                <td>:</td>
+                                <td><?php echo tanggal($rowOrder['order_end_date']); ?></td>
+                            </tr>
+                            <tr>
                                 <th>Status</th>
                                 <td>:</td>
                                 <td><?php echo $rowOrder['order_status'] == 0 ? 'Process' : 'Picked'; ?></td>
@@ -140,16 +163,31 @@
                                     <td colspan="4">Total</td>
                                     <td><?php echo $total; ?></td>
                                 </tr>
+                                <?php if (isset($_GET['detail'])) { ?>
+                                    <?php if ($rowOrder['order_status']==1) { ?>
+                                        <tr>
+                                            <td colspan="4">Pay</td>
+                                            <td><?php echo $rowOrder['order_pay']; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">Change</td>
+                                            <td><?php echo $rowOrder['order_change']; ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>                        
                     </div>
-
-                    <div class="mb-3" align="center">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Buy
-                        </button>
-                    </div>
+                    <?php if (isset($_GET['detail'])) { ?>
+                        <?php if ($rowOrder['order_status']==0) { ?>
+                            <div class="mb-3" align="center">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Buy
+                                </button>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
 
                 <?php else: ?>
                     <h5 class="card-title">Add Order</h5>
@@ -162,15 +200,13 @@
                                     <input type="hidden" name="order_code" value="<?php echo $code_form; ?>">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="date_end" class="form-label">Date End</label>
-                                    <input type="date" name="order_end_date" id="date_end" class="form-control" value="<?php echo $date_form; ?>" required>
+                                    <label for="date" class="form-label">Date</label>
+                                    <input readonly type="date" name="order_date" id="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Code</label>
-                                    <select name="order_status" id="status" class="form-control" required>
-                                        <option value="">Choose Status</option>
-                                        <option value="0">Process</option>
-                                        <option value="1">Picked</option>
+                                    <label for="status" class="form-label">Status</label>
+                                    <select name="order_status" id="status" class="form-control">
+                                        <option selected value="0">Process</option>
                                     </select>
                                 </div>                           
                             </div>
@@ -185,9 +221,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="date" class="form-label">Date</label>
-                                    <input type="date" name="order_date" id="date" class="form-control" value="<?php echo $date_form; ?>" required>
-                                </div>     
+                                    <label for="date_end" class="form-label">Date End</label>
+                                    <input type="date" min="<?php echo date('Y-m-d'); ?>" name="order_end_date" id="date_end" class="form-control" value="" required>
+                                </div>
                             </div>
     
                             <div class="mb-3" align="right">
@@ -260,7 +296,7 @@
                 <?php } ?>
             </select>
         </td>
-        <td><input type="number" step="any" class="form-control" name="qty[]"></td>
+        <td><input type="number" step="any" class="form-control" name="qty[]" placeholder="Enter your quantity"></td>
         <td><button type="button" class="btn btn-danger delRow">Delete</button></td>
         `;
         tbody.appendChild(tr);
