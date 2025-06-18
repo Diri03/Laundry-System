@@ -33,7 +33,6 @@
                                     <td><?php echo $data['level_name']; ?></td>
                                     <td>
                                         <a href="?page=add-level&edit=<?php echo $data['id']; ?>" class="btn btn-success">Edit</a>
-                                        <a onclick="return alert('Are you sure?');" href="?page=level&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             <?php } ?>

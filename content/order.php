@@ -9,6 +9,11 @@
         // mysqli_query($conn, "DELETE FROM order WHERE id = '$id_order'");
         header("location:?page=order&remove=success");
     }
+
+    function tanggal($d){
+        $waktu = strtotime($d);
+        return date('d F Y', $waktu);
+    }
 ?>
 
 <div class="row">
@@ -26,6 +31,7 @@
                                 <th>Code</th>
                                 <th>Name</th>
                                 <th>Order</th>
+                                <th>End Order</th>
                                 <th>Status</th>
                                 <th></th>
                             </tr>
@@ -35,10 +41,11 @@
                                 <tr>
                                     <td><a href="?page=add-order&detail=<?php echo $data['id']; ?>"><?php echo $data['order_code']; ?></a></td>
                                     <td><?php echo $data['customer_name']; ?></td>
-                                    <td><?php echo $data['order_date']; ?></td>
+                                    <td><?php echo tanggal($data['order_date']); ?></td>
+                                    <td><?php echo tanggal($data['order_end_date']); ?></td>
                                     <td><?php echo $data['order_status'] == 0 ? 'Process' : 'Picked'; ?></td>
                                     <td>
-                                        <a href="?page=add-order&edit=<?php echo $data['id']; ?>" class="btn btn-success">Edit</a>
+                                        <a href="?page=add-order&detail=<?php echo $data['id']; ?>&print=" class="btn btn-success">Print</a>
                                         <a onclick="return alert('Are you sure?')" href="?page=order&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>

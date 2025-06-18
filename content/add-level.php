@@ -31,7 +31,7 @@
                 <h5 class="card-title"><?php echo $title; ?> Level</h5>
                 <form action="" method="post">
                     <div class="mb-3">
-                        <label for="" class="form-label">Level Name</label>
+                        <label for="" class="form-label">Level Name <span class="text-danger">*</span></label>
                         <input type="text" name="level_name" id="" class="form-control" placeholder="Enter your level name" value="<?php echo $level_form; ?>" required>
                     </div>
                     <div class="mb-3">
