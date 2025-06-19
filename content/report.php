@@ -1,9 +1,39 @@
+<?php
+    $q = mysqli_query($conn, "SELECT c.customer_name, o.order_date, s.service_name, od.qty, s.price, od.subtotal
+    FROM trans_order_detail od
+    LEFT JOIN type_of_service s ON od.id_service = s.id
+    LEFT JOIN trans_order o ON od.id_order = o.id
+    LEFT JOIN customer c ON o.id_customer = c.id
+
+    ORDER BY od.id, o.total DESC
+    ");
+
+    $r = mysqli_fetch_all($q, MYSQLI_ASSOC);
+?>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title"></h5>
+                <h5 class="card-title">Report Transaction Order</h5>
                 <div class="table-responsive">
+                    <div class="mb-3">
+                        <form action="" method="post">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="" class="form-label">Date Start</label>
+                                    <input type="date" name="date_start" class="form-control" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="" class="form-label">Date End</label>
+                                    <input type="date" name="date_end" class="form-control" required>
+                                </div>
+                                <div class="col-sm-3 mt-8">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -16,14 +46,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <?php foreach ($r as $row) : ?>
+                                <tr>
+                                    <td><?php echo $row['customer_name']; ?></td>
+                                    <td><?php echo tanggal($row['order_date']); ?></td>
+                                    <td><?php echo $row['service_name']; ?></td>
+                                    <td><?php echo formatKg($row['qty']/1000); ?></td>
+                                    <td><?php echo rupiah($row['price']); ?></td>
+                                    <td><?php echo rupiah($row['subtotal']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

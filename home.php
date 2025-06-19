@@ -6,6 +6,21 @@
   if (empty($_SESSION['NAME'])) {
     header("location:index.php?access=denied");
   }
+
+  function tanggal($d){
+    $waktu = strtotime($d);
+    return date('d F Y', $waktu);
+  }
+
+  function rupiah($angka){
+    $hasil_rupiah = "Rp " . number_format($angka, 2, ',', '.');
+    return $hasil_rupiah;
+  }
+
+  function formatKg($angka){
+    $hasil_kg = $angka . " Kg";
+    return $hasil_kg;
+  }
 ?>
 
 <!doctype html>

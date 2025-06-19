@@ -9,11 +9,6 @@
         // mysqli_query($conn, "DELETE FROM order WHERE id = '$id_order'");
         header("location:?page=order&remove=success");
     }
-
-    function tanggal($d){
-        $waktu = strtotime($d);
-        return date('d F Y', $waktu);
-    }
 ?>
 
 <div class="row">

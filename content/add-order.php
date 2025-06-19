@@ -3,12 +3,7 @@
     $rowsC = mysqli_fetch_all($queryC, MYSQLI_ASSOC);
 
     $queryS = mysqli_query($conn, "SELECT * FROM type_of_service WHERE deleted_at is NULL ORDER BY id DESC");
-    $rowsS = mysqli_fetch_all($queryS, MYSQLI_ASSOC);
-
-    function tanggal($d){
-        $waktu = strtotime($d);
-        return date('d F Y', $waktu);
-    }
+    $rowsS = mysqli_fetch_all($queryS, MYSQLI_ASSOC);    
 
     if (isset($_GET['detail'])) {
         $id_order = $_GET['detail'];
@@ -17,11 +12,6 @@
 
         $queryD = mysqli_query($conn, "SELECT od.*, s.* FROM trans_order_detail od LEFT JOIN type_of_service s ON od.id_service = s.id WHERE id_order = '$id_order' ORDER BY od.id DESC");
         $rowD = mysqli_fetch_all($queryD, MYSQLI_ASSOC);
-
-        $lahir = strtotime($rowOrder['order_date']);
-        $lahirTahun = (int)date("Y", $lahir);
-        $lahirBulan = (int)date("m", $lahir);
-        $lahirHari = (int)date("d", $lahir);
     }
 
     if (isset($_POST["save"])) {
@@ -156,25 +146,25 @@
                                     <tr>
                                         <td><?php echo $key + 1; ?></td>
                                         <td><?php echo $data['service_name']; ?></td>
-                                        <td><?php echo $data['qty']/1000; ?></td>
-                                        <td><?php echo $data['price']; ?></td>
-                                        <td><?php echo $data['qty']/1000 * $data['price']; $total += $data['qty']/1000 * $data['price']; ?></td>
+                                        <td><?php echo formatKg($data['qty']/1000); ?></td>
+                                        <td><?php echo rupiah($data['price']); ?></td>
+                                        <td><?php echo rupiah($data['qty']/1000 * $data['price']); $total += $data['qty']/1000 * $data['price']; ?></td>
 
                                     </tr>
                                 <?php } ?>
                                 <tr>
                                     <td colspan="4">Total</td>
-                                    <td><?php echo $total; ?></td>
+                                    <td><?php echo rupiah($total); ?></td>
                                 </tr>
                                 <?php if (isset($_GET['detail'])) { ?>
                                     <?php if ($rowOrder['order_status']==1) { ?>
                                         <tr>
                                             <td colspan="4">Pay</td>
-                                            <td><?php echo $rowOrder['order_pay']; ?></td>
+                                            <td><?php echo rupiah($rowOrder['order_pay']); ?></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4">Change</td>
-                                            <td><?php echo $rowOrder['order_change']; ?></td>
+                                            <td><?php echo rupiah($rowOrder['order_change']); ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>
@@ -275,7 +265,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="total" class="form-label">Total</label>
-                        <input readonly type="number" step="any" id="total" class="form-control" value="<?php echo $total; ?>" required>
+                        <input readonly type="text" id="total" class="form-control" value="<?php echo rupiah($total); ?>">
                         <input type="hidden" name="total" value="<?php echo $total; ?>">
                     </div>
                     <div class="mb-3">

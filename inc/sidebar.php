@@ -14,33 +14,26 @@
     <ul class="menu-inner py-1">
     <!-- Dashboards -->
         <li class="menu-item">
-            <a href="" class="menu-link">
+            <a href="?page=dashboard" class="menu-link">
                 <i class="menu-icon icon-base ri ri-home-smile-line"></i>
                 <div data-i18n="Dashboards">Dashboards</div>
             </a>
-            <!-- <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="index.html" class="menu-link">
-                        <div data-i18n="Analytics">Analytics</div>
-                    </a>
-                </li>
-            </ul> -->
         </li>
-
-    <!-- Layouts -->
+        
+        <!-- Layouts -->
         <?php if ($_SESSION['ID_LEVEL'] == 1) { ?>
-        <li class="menu-item active open">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon icon-base ri ri-database-2-line"></i>
-                <div data-i18n="Master Data">Master Data</div>
-            </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="?page=customer" class="menu-link">
-                        <div data-i18n="Customer">Customer</div>
-                    </a>
-                </li>
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon icon-base ri ri-database-2-line"></i>
+                    <div data-i18n="Master Data">Master Data</div>
+                </a>
+                
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="?page=customer" class="menu-link">
+                            <div data-i18n="Customer">Customer</div>
+                        </a>
+                    </li>
                 <li class="menu-item">
                     <a href="?page=services" class="menu-link">
                         <div data-i18n="Services">Services</div>
@@ -58,6 +51,16 @@
                 </li>
             </ul>
         </li>
+        <?php } ?>
+
+        <!-- Report -->
+        <?php if ($_SESSION['ID_LEVEL'] == 3 || $_SESSION['ID_LEVEL'] == 1) { ?>
+            <li class="menu-item">
+                <a href="?page=report" class="menu-link">
+                    <i class="menu-icon icon-base ri ri-newspaper-line"></i>
+                    <div data-i18n="Report">Report</div>
+                </a>
+            </li>
         <?php } ?>
 
         <?php if ($_SESSION['ID_LEVEL'] == 1 || $_SESSION['ID_LEVEL'] == 2) { ?>
