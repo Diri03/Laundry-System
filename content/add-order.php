@@ -112,6 +112,9 @@
                 <?php if (isset($_GET['detail'])): ?>
                     <h5 class="card-title">Detail Order</h5>
                     <div class="table-responsive mb-3">
+                        <div class="mb-3" align="right">
+                            <a href="?page=order" class="btn btn-secondary">Back</a>
+                        </div>
                         <table class="table table-stripped">
                             <tr>
                                 <th>Code</th>
@@ -178,7 +181,7 @@
                             </tbody>
                         </table>                        
                     </div>
-                    <?php if (isset($_GET['detail'])) { ?>
+                    <?php if (isset($_GET['detail']) && !isset($_GET['print'])) { ?>
                         <?php if ($rowOrder['order_status']==0) { ?>
                             <div class="mb-3" align="center">
                                 <!-- Button trigger modal -->
@@ -191,20 +194,27 @@
 
                 <?php else: ?>
                     <h5 class="card-title">Add Order</h5>
+                    <div class="mb-3" align="right">
+                        <a href="?page=order" class="btn btn-secondary">Back</a>
+                    </div>
                     <form action="" method="post">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="mb-3">
-                                    <label for="code" class="form-label">Code</label>
+                                    <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
                                     <input readonly type="text" id="code" class="form-control" value="<?php echo $code_form; ?>" required>
                                     <input type="hidden" name="order_code" value="<?php echo $code_form; ?>">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="date" class="form-label">Date</label>
+                                    <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
                                     <input readonly type="date" name="order_date" id="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
+                                    <label for="date_end" class="form-label">Date End <span class="text-danger">*</span></label>
+                                    <input type="date" min="<?php echo date('Y-m-d'); ?>" name="order_end_date" id="date_end" class="form-control" value="" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                     <select name="order_status" id="status" class="form-control">
                                         <option selected value="0">Process</option>
                                     </select>
@@ -212,7 +222,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Name</label>
+                                    <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                                     <select name="id_customer" id="name" class="form-control" required>
                                         <option value="">Choose Customer</option>
                                         <?php foreach ($rowsC as $key => $data) { ?>
@@ -221,9 +231,10 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="date_end" class="form-label">Date End</label>
-                                    <input type="date" min="<?php echo date('Y-m-d'); ?>" name="order_end_date" id="date_end" class="form-control" value="" required>
+                                    <label for="notes" class="form-label">Notes</label>
+                                    <textarea name="notes" id="notes" cols="30" rows="9" class="form-control"></textarea>
                                 </div>
+                                
                             </div>
     
                             <div class="mb-3" align="right">

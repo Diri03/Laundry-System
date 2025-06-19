@@ -41,16 +41,16 @@
                 <h5 class="card-title"><?php echo $title; ?> Type of Service</h5>
                 <form action="" method="post">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" name="service_name" id="name" class="form-control" placeholder="Enter your type of service" value="<?php echo $name_form; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="price" class="form-label">Price</label>
+                        <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
                         <input type="number" name="price" id="price" class="form-control" placeholder="Enter your price" value="<?php echo $price_form; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">description</label>
-                        <textarea name="description" id="description" cols="30" rows="10" class="form-control" required><?php echo $description_form; ?></textarea>
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10" class="form-control"><?php echo $description_form; ?></textarea>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Save</button>

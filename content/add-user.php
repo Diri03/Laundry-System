@@ -44,7 +44,7 @@
                 <h5 class="card-title"><?php echo $title; ?> User</h5>
                 <form action="" method="post">
                     <div class="mb-3">
-                        <label for="level" class="form-label">Level</label>
+                        <label for="level" class="form-label">Level <span class="text-danger">*</span></label>
                         <select name="id_level" id="level" class="form-control" required>
                             <option value="">Choose your level</option>
                             <?php foreach ($rowLevels as $key => $data) { ?>
@@ -53,15 +53,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="name" class="form-control" placeholder="Enter your name" value="<?php echo $name_form; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                         <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" value="<?php echo $email_form; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">Password <?php echo isset($_GET['edit']) ? '' : '<span class="text-danger">*</span>' ?></label>
                         <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" <?php echo $required; ?>>
                     </div>
                     <div class="mb-3">
