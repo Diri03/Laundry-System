@@ -17,11 +17,6 @@
 
         $queryD = mysqli_query($conn, "SELECT od.*, s.* FROM trans_order_detail od LEFT JOIN type_of_service s ON od.id_service = s.id WHERE id_order = '$id_order' ORDER BY od.id DESC");
         $rowD = mysqli_fetch_all($queryD, MYSQLI_ASSOC);
-
-        $lahir = strtotime($rowOrder['order_date']);
-        $lahirTahun = (int)date("Y", $lahir);
-        $lahirBulan = (int)date("m", $lahir);
-        $lahirHari = (int)date("d", $lahir);
     }
 
     if (isset($_POST["save"])) {
