@@ -4,9 +4,7 @@
 
     if (isset($_GET['delete'])) {
         $id_services = $_GET['delete'];
-        $now = date('Y-m-d H:i:s');
-        mysqli_query($conn, "UPDATE type_of_service SET deleted_at = '$now' WHERE id = '$id_services'");
-        // mysqli_query($conn, "DELETE FROM type_of_service WHERE id = '$id_services'");
+        mysqli_query($conn, "UPDATE type_of_service SET deleted_at = NOW() WHERE id = '$id_services'");
         header("location:?page=services&remove=success");
     }
 ?>

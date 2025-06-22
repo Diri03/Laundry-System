@@ -4,9 +4,7 @@
 
     if (isset($_GET['delete'])) {
         $id_order = $_GET['delete'];
-        $now = date('Y-m-d H:i:s');
-        mysqli_query($conn, "UPDATE order SET deleted_at = '$now' WHERE id = '$id_order'");
-        // mysqli_query($conn, "DELETE FROM order WHERE id = '$id_order'");
+        mysqli_query($conn, "UPDATE trans_order SET deleted_at = NOW() WHERE id = '$id_order'");
         header("location:?page=order&remove=success");
     }
 ?>
@@ -52,5 +50,3 @@
         </div>
     </div>
 </div>
-
-
