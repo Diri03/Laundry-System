@@ -39,14 +39,17 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title"><?php echo $title; ?> Customer</h5>
+                <div class="mb-3" align="right">
+                    <a href="?page=customer" class="btn btn-secondary">Back</a>
+                </div>
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" name="customer_name" id="name" class="form-control" placeholder="Enter your name" value="<?php echo $name_form; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone" value="<?php echo $phone_form; ?>">
+                        <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone" value="<?php echo $phone_form; ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Address</label>

@@ -42,6 +42,9 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title"><?php echo $title; ?> User</h5>
+                <div class="mb-3" align="right">
+                    <a href="?page=user" class="btn btn-secondary">Back</a>
+                </div>
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="level" class="form-label">Level <span class="text-danger">*</span></label>

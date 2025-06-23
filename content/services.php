@@ -33,11 +33,11 @@
                                 <tr>
                                     <td><?php echo $key + 1; ?></td>
                                     <td><?php echo $data['service_name']; ?></td>
-                                    <td><?php echo $data['price']; ?></td>
+                                    <td><?php echo rupiah($data['price']); ?></td>
                                     <td><?php echo $data['description']; ?></td>
                                     <td>
                                         <a href="?page=add-services&edit=<?php echo $data['id']; ?>" class="btn btn-success">Edit</a>
-                                        <a onclick="return alert('Are you sure?')" href="?page=services&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
+                                        <a onclick="return confirm('Are you sure?')" href="?page=services&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             <?php } ?>

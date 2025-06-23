@@ -37,7 +37,7 @@
                                     <td><?php echo $data['level_name']; ?></td>
                                     <td>
                                         <a href="?page=add-user&edit=<?php echo $data['id']; ?>" class="btn btn-success">Edit</a>
-                                        <a onclick="return alert('Are you sure?')" href="?page=user&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
+                                        <a onclick="return confirm('Are you sure?')" href="?page=user&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             <?php } ?>

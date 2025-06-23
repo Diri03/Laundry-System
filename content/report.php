@@ -30,7 +30,7 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Report Transaction Order</h5>
+                <h5 class="card-title">Report Detail Transaction Order</h5>
                 <div class="table-responsive">
                     <div class="mb-3">
                         <form action="" method="post">

@@ -61,7 +61,7 @@
                                                 <td><?php echo $data['customer_name']; ?></td>
                                                 <td><?php echo tanggal($data['order_date']); ?></td>
                                                 <td><?php echo $data['order_status'] == 1 ? 'Pickup' : 'Process'; ?></td>
-                                                <td><?php echo $data['total']; ?></td>
+                                                <td><?php echo rupiah($data['total']); ?></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>

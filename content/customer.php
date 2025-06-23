@@ -37,7 +37,7 @@
                                     <td><?php echo $data['address']; ?></td>
                                     <td>
                                         <a href="?page=add-customer&edit=<?php echo $data['id']; ?>" class="btn btn-success">Edit</a>
-                                        <a onclick="return alert('Are you sure?')" href="?page=customer&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
+                                        <a onclick="return confirm('Are you sure?')" href="?page=customer&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             <?php } ?>

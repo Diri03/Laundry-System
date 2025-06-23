@@ -53,7 +53,8 @@
         $id_order = $_GET['detail'];
         $id_customer = $rowOrder['id_customer'];
         $order_pay = $_POST['order_pay'];
-        $order_change = $order_pay - $rowOrder['total'];
+        // $total = $_POST['total'];
+        $order_change = $order_pay - $total;
         $now = date('Y-m-d H:i:s');
         $pickup_date = $now;
         $order_status = 1;
@@ -112,6 +113,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php $total = 0; ?>
                                 <?php foreach ($rowD as $key => $data) { ?>
                                     <tr>
                                         <td><?php echo $key + 1; ?></td>
@@ -120,31 +122,31 @@
                                                 <?php echo $data['service_name']; ?>
                                             <?php } else { ?>
                                                 <?php echo $data['service_name']; ?>  <i class="ri ri-bookmark-fill cursor-pointer" data-bs-toggle="modal" data-bs-target="#note<?php echo $key + 1; ?>"></i>
-                                                <!-- Modal Note -->
-                                                <div class="modal fade" id="note<?php echo $key + 1; ?>" tabindex="-1" aria-labelledby="note<?php echo $key + 1; ?>Label" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="note<?php echo $key + 1; ?>Label">Note</h1>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <textarea readonly class="form-control"><?php echo $data['notes']; ?></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             <?php } ?>
                                         </td>
                                         <td><?php echo formatKg($data['qty']/1000); ?></td>
                                         <td><?php echo rupiah($data['price']); ?></td>
-                                        <td><?php echo rupiah($data['subtotal']); ?></td>
+                                        <td><?php echo rupiah($data['qty']/1000 * $data['price']); $total += $data['qty']/1000 * $data['price']; ?></td>
 
                                     </tr>
+                                    <!-- Modal Note -->
+                                    <div class="modal fade" id="note<?php echo $key + 1; ?>" tabindex="-1" aria-labelledby="note<?php echo $key + 1; ?>Label" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="note<?php echo $key + 1; ?>Label">Note</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <textarea readonly class="form-control"><?php echo $data['notes']; ?></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php } ?>
                                 <tr>
                                     <td colspan="4">Total</td>
-                                    <td><?php echo rupiah($rowOrder['total']); ?></td>
+                                    <td><?php echo rupiah($total); ?></td>
                                 </tr>
                                 <?php if (isset($_GET['detail'])) { ?>
                                     <?php if ($rowOrder['order_status']==1) { ?>
@@ -251,11 +253,11 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="total" class="form-label">Total</label>
-                        <input readonly type="text" id="total" class="form-control" value="<?php echo rupiah($rowOrder['total']); ?>">
+                        <input readonly type="text" id="total" class="form-control" value="<?php echo rupiah($total); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="pay" class="form-label">Pay (Rp)</label>
-                        <input type="number" step="any" min="<?php echo $rowOrder['total']; ?>" name="order_pay" id="pay" class="form-control" required>
+                        <input type="number" step="any" min="<?php echo $total; ?>" name="order_pay" id="pay" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">

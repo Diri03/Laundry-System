@@ -39,6 +39,9 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title"><?php echo $title; ?> Type of Service</h5>
+                <div class="mb-3" align="right">
+                    <a href="?page=services" class="btn btn-secondary">Back</a>
+                </div>
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
