@@ -24,6 +24,9 @@
     }
 
     if (isset($_POST["save"])) {
+        if (empty($_POST['id_service'])) {
+            header('location:?page=add-order&transaction=failed');
+        }
         $id_customer = $_POST['id_customer'];
         $order_code = $_POST['order_code'];
         $order_date = $_POST['order_date'];
