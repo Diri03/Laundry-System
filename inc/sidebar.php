@@ -1,3 +1,8 @@
+<?php
+    $queryLevel = mysqli_query($conn, "SELECT * FROM level");
+    $rowLevels = mysqli_fetch_all($queryLevel, MYSQLI_ASSOC);
+?>
+
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="index.html" class="app-brand-link">
@@ -21,7 +26,7 @@
         </li>
         
         <!-- Layouts -->
-        <?php if ($_SESSION['ID_LEVEL'] == 1) { ?>
+        <?php if ($_SESSION['ID_LEVEL'] == 1 || $_SESSION['ID_LEVEL'] == 2) { ?>
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon icon-base ri ri-database-2-line"></i>

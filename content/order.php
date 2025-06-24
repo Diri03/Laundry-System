@@ -38,7 +38,7 @@
                                     <td><?php echo tanggal($data['order_end_date']); ?></td>
                                     <td><?php echo $data['order_status'] == 0 ? 'Process' : 'Picked Up'; ?></td>
                                     <td>
-                                        <a href="?page=add-order&detail=<?php echo $data['id']; ?>&print=" class="btn btn-success">Print</a>
+                                        <a href="print.php?id_order=<?php echo $data['id']; ?>" class="btn btn-success">Print</a>
                                         <a onclick="return alert('Are you sure?')" href="?page=order&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>

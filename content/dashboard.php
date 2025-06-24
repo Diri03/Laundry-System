@@ -12,7 +12,7 @@
     $queryLogin = mysqli_query($conn, "SELECT user.*, level.level_name FROM user LEFT JOIN level ON user.id_level = level.id WHERE user.id = '$id'");
     $rowLogin = mysqli_fetch_assoc($queryLogin);
 
-    $queryOrder = mysqli_query($conn, "SELECT c.customer_name, o.* FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id ORDER BY total DESC LIMIT 20");
+    $queryOrder = mysqli_query($conn, "SELECT c.customer_name, o.* FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id ORDER BY total DESC LIMIT 7");
     $rowOrder = mysqli_fetch_all($queryOrder, MYSQLI_ASSOC);
 ?>
 
