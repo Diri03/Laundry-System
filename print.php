@@ -145,7 +145,7 @@ $jam = explode(" ", $tanggal)[1];
         <div class="line"></div>
         <div class="summary">
             <div class="row">
-                <span>Total</span>
+                <span><strong>Total</strong></span>
                 <span><?php echo rupiah($row[0]['total']) ?></span>
             </div>
         </div>

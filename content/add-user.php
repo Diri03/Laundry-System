@@ -6,6 +6,10 @@
         $id_user = $_GET['edit'];
         $title = "Edit";
         $query = mysqli_query($conn, "SELECT * FROM user WHERE id = '$id_user'");
+        if (mysqli_num_rows($query) == 0) {
+            header("location:?page=user&data=notfound");
+            exit();
+        }
         $row = mysqli_fetch_assoc($query);
         $name_form = $row['name'];
         $email_form = $row['email'];

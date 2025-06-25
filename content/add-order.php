@@ -17,6 +17,10 @@
     if (isset($_GET['detail'])) {
         $id_order = $_GET['detail'];
         $queryOrder = mysqli_query($conn, "SELECT o.*, c.customer_name FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id WHERE o.id = '$id_order'");
+        if (mysqli_num_rows($queryOrder) == 0) {
+            header("location:?page=order&data=notfound");
+            exit();
+        }
         $rowOrder = mysqli_fetch_assoc($queryOrder);
 
         $queryD = mysqli_query($conn, "SELECT od.*, s.* FROM trans_order_detail od LEFT JOIN type_of_service s ON od.id_service = s.id WHERE id_order = '$id_order' ORDER BY od.id DESC");

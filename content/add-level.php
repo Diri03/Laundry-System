@@ -3,6 +3,10 @@
         $id_level = $_GET['edit'];
         $title = "Edit";
         $query = mysqli_query($conn, "SELECT * FROM level WHERE id = '$id_level'");
+        if (mysqli_num_rows($query) == 0) {
+            header("location:?page=level&data=notfound");
+            exit();
+        }
         $row = mysqli_fetch_assoc($query);
         $level_form = $row['level_name'];
 

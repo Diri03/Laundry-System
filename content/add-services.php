@@ -3,6 +3,10 @@
         $id_services = $_GET['edit'];
         $title = "Edit";
         $query = mysqli_query($conn, "SELECT * FROM type_of_service WHERE id = '$id_services'");
+        if (mysqli_num_rows($query) == 0) {
+            header("location:?page=services&data=notfound");
+            exit();
+        }
         $row = mysqli_fetch_assoc($query);
         $name_form = $row['service_name'];
         $price_form = $row['price'];

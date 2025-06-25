@@ -3,6 +3,10 @@
         $id_customer = $_GET['edit'];
         $title = "Edit";
         $query = mysqli_query($conn, "SELECT * FROM customer WHERE id = '$id_customer'");
+        if (mysqli_num_rows($query) == 0) {
+            header("location:?page=customer&data=notfound");
+            exit();
+        }
         $row = mysqli_fetch_assoc($query);
         $name_form = $row['customer_name'];
         $phone_form = $row['phone'];
