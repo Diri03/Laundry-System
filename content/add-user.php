@@ -1,4 +1,9 @@
 <?php
+    if (strtolower($rowLevel['level_name']) != 'administrator') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     $queryLevel = mysqli_query($conn, "SELECT * FROM level ORDER BY id DESC");
     $rowLevels = mysqli_fetch_all($queryLevel, MYSQLI_ASSOC);
 

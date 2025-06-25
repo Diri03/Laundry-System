@@ -1,6 +1,7 @@
 <?php
-    $queryLevel = mysqli_query($conn, "SELECT * FROM level");
-    $rowLevels = mysqli_fetch_all($queryLevel, MYSQLI_ASSOC);
+    $id_level = $_SESSION['ID_LEVEL'];
+    $queryLevel = mysqli_query($conn, "SELECT * FROM level WHERE id = '$id_level'");
+    $rowLevel = mysqli_fetch_assoc($queryLevel);
 ?>
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -26,7 +27,7 @@
         </li>
         
         <!-- Layouts -->
-        <?php if ($_SESSION['ID_LEVEL'] == 1 || $_SESSION['ID_LEVEL'] == 2) { ?>
+        <?php if (strtolower($rowLevel['level_name']) == 'administrator' || strtolower($rowLevel['level_name']) == 'operator') { ?>
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon icon-base ri ri-database-2-line"></i>
@@ -44,6 +45,7 @@
                         <div data-i18n="Services">Services</div>
                     </a>
                 </li>
+                <?php if (strtolower($rowLevel['level_name']) == 'administrator') { ?>
                 <li class="menu-item">
                     <a href="?page=level" class="menu-link">
                         <div data-i18n="Level">Level</div>
@@ -54,12 +56,13 @@
                         <div data-i18n="User">User</div>
                     </a>
                 </li>
+                <?php } ?>
             </ul>
         </li>
         <?php } ?>
 
         <!-- Report -->
-        <?php if ($_SESSION['ID_LEVEL'] == 3 || $_SESSION['ID_LEVEL'] == 1) { ?>
+        <?php if (strtolower($rowLevel['level_name']) == 'leader' || strtolower($rowLevel['level_name']) == 'administrator') { ?>
             <li class="menu-item">
                 <a href="?page=report" class="menu-link">
                     <i class="menu-icon icon-base ri ri-newspaper-line"></i>
@@ -68,7 +71,7 @@
             </li>
         <?php } ?>
 
-        <?php if ($_SESSION['ID_LEVEL'] == 1 || $_SESSION['ID_LEVEL'] == 2) { ?>
+        <?php if (strtolower($rowLevel['level_name']) == 'administrator' || strtolower($rowLevel['level_name']) == 'operator') { ?>
             <!-- Transaction -->
             <li class="menu-header mt-7">
                 <span class="menu-header-text">Transaction</span>

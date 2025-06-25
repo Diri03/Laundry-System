@@ -1,4 +1,9 @@
 <?php
+    if (strtolower($rowLevel['level_name']) == 'operator') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     $selectOrder = mysqli_query($conn, "SELECT order_date FROM trans_order ORDER BY order_date");
     $rowOrder = mysqli_fetch_all($selectOrder, MYSQLI_ASSOC);
     $len = mysqli_num_rows($selectOrder);

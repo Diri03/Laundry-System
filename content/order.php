@@ -1,4 +1,9 @@
 <?php
+    if (strtolower($rowLevel['level_name']) == 'leader') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     $query = mysqli_query($conn, "SELECT o.*, c.customer_name FROM trans_order o LEFT JOIN customer c ON o.id_customer = c.id WHERE o.deleted_at is NULL ORDER BY o.id DESC");
     $rows = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
@@ -39,7 +44,7 @@
                                     <td><?php echo $data['order_status'] == 0 ? 'Process' : 'Picked Up'; ?></td>
                                     <td>
                                         <a href="print.php?id_order=<?php echo $data['id']; ?>" class="btn btn-success">Print</a>
-                                        <a onclick="return alert('Are you sure?')" href="?page=order&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
+                                        <a onclick="return confirm('Are you sure?')" href="?page=order&delete=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
                             <?php } ?>

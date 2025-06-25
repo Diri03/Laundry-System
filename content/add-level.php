@@ -1,4 +1,9 @@
 <?php
+    if (strtolower($rowLevel['level_name']) != 'administrator') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     if (isset($_GET['edit'])) {
         $id_level = $_GET['edit'];
         $title = "Edit";

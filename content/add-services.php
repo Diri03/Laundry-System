@@ -1,4 +1,9 @@
 <?php
+    if (strtolower($rowLevel['level_name']) == 'leader' || strtolower($rowLevel['level_name']) == 'operator') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     if (isset($_GET['edit'])) {
         $id_services = $_GET['edit'];
         $title = "Edit";

@@ -1,4 +1,9 @@
 <?php
+    if (strtolower($rowLevel['level_name']) == 'leader') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     $query = mysqli_query($conn, "SELECT * FROM customer WHERE deleted_at is NULL ORDER BY id DESC");
     $rows = mysqli_fetch_all($query, MYSQLI_ASSOC);
 

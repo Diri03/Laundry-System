@@ -1,5 +1,9 @@
 <?php
-// <td><input type="number" step="any" class="form-control" name="qty[]" placeholder="Enter your quantity"></td>
+    if (strtolower($rowLevel['level_name']) == 'leader') {
+        header("location:home.php?access=denied");
+        exit;
+    }
+
     $queryO = mysqli_query($conn, "SELECT * FROM trans_order ORDER BY id DESC");
     if (mysqli_num_rows($queryO) == 0) {
         $code_form = "DR" . "1";
