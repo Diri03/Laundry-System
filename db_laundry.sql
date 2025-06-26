@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Jun 2025 pada 10.11
+-- Waktu pembuatan: 26 Jun 2025 pada 03.20
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -134,7 +134,9 @@ INSERT INTO `trans_laundry_pickup` (`id`, `id_order`, `id_customer`, `pickup_dat
 (6, 16, 4, '2025-06-24 02:53:17', '', '2025-06-24 00:53:17', NULL),
 (7, 21, 9, '2025-06-24 02:54:53', '', '2025-06-24 00:54:53', NULL),
 (8, 18, 6, '2025-06-24 02:57:14', '', '2025-06-24 00:57:14', NULL),
-(9, 14, 2, '2025-06-24 05:03:00', '', '2025-06-24 03:03:00', NULL);
+(9, 14, 2, '2025-06-24 05:03:00', '', '2025-06-24 03:03:00', NULL),
+(10, 31, 9, '2025-06-24 10:14:48', '', '2025-06-24 08:14:48', NULL),
+(11, 30, 18, '2025-06-25 10:12:45', '', '2025-06-25 08:12:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -179,7 +181,9 @@ INSERT INTO `trans_order` (`id`, `id_customer`, `order_code`, `order_date`, `ord
 (27, 15, 'DR27', '2025-06-24', '2025-06-26', 0, '2025-06-24 00:56:00', '2025-06-24 00:56:00', NULL, 0, 0, 56000),
 (28, 16, 'DR28', '2025-06-24', '2025-06-30', 0, '2025-06-24 00:56:27', '2025-06-24 00:56:27', NULL, 0, 0, 26000),
 (29, 17, 'DR29', '2025-06-24', '2025-06-28', 0, '2025-06-24 00:56:44', '2025-06-24 00:56:44', NULL, 0, 0, 54000),
-(30, 18, 'DR30', '2025-06-24', '2025-06-27', 0, '2025-06-24 00:57:00', '2025-06-24 00:57:00', NULL, 0, 0, 24000);
+(30, 18, 'DR30', '2025-06-24', '2025-06-27', 1, '2025-06-24 00:57:00', '2025-06-25 08:13:03', '2025-06-25 15:13:03', 50000, 26000, 24000),
+(31, 9, 'DR31', '2025-06-24', '2025-06-27', 1, '2025-06-24 08:14:34', '2025-06-24 23:51:01', '2025-06-25 06:51:01', 30000, 6300, 23700),
+(32, 16, 'DR32', '2025-06-25', '2025-06-27', 0, '2025-06-25 08:19:39', '2025-06-25 08:19:39', NULL, 0, 0, 21700);
 
 -- --------------------------------------------------------
 
@@ -233,7 +237,10 @@ INSERT INTO `trans_order_detail` (`id`, `id_order`, `id_service`, `qty`, `subtot
 (49, 28, 3, 5200, 26000.00, '', '2025-06-24 00:56:27', NULL),
 (50, 29, 2, 12000, 54000.00, '', '2025-06-24 00:56:44', NULL),
 (51, 30, 3, 3000, 15000.00, '', '2025-06-24 00:57:00', NULL),
-(52, 30, 2, 2000, 9000.00, '', '2025-06-24 00:57:00', NULL);
+(52, 30, 2, 2000, 9000.00, '', '2025-06-24 00:57:00', NULL),
+(53, 31, 3, 3200, 16000.00, 'bersih', '2025-06-24 08:14:34', NULL),
+(54, 31, 4, 1100, 7700.00, 'yg bener', '2025-06-24 08:14:34', NULL),
+(55, 32, 4, 3100, 21700.00, 'weqwe', '2025-06-25 08:19:39', NULL);
 
 -- --------------------------------------------------------
 
@@ -370,19 +377,19 @@ ALTER TABLE `setting`
 -- AUTO_INCREMENT untuk tabel `trans_laundry_pickup`
 --
 ALTER TABLE `trans_laundry_pickup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `trans_order`
 --
 ALTER TABLE `trans_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT untuk tabel `trans_order_detail`
 --
 ALTER TABLE `trans_order_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT untuk tabel `type_of_service`
